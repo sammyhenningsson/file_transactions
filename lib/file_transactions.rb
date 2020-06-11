@@ -12,4 +12,5 @@ require 'file_transactions/change_file_command'
 require 'file_transactions/create_directory_command'
 require 'file_transactions/create_file_command'
 require 'file_transactions/delete_file_command'
+require 'file_transactions/move_file_command'
 
