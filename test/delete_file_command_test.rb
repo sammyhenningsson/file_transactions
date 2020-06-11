@@ -15,12 +15,12 @@ module FileTransactions
       in_project do
         command.execute
 
-        refute File.exist? @filename
+        refute_file_exist @filename
 
         command.undo
 
-        assert File.exist? @filename
-        assert File.read(@filename) == @original_content
+        assert_file_exist @filename
+        assert_file_content @filename, @original_content
         assert_clean_project
       end
     end

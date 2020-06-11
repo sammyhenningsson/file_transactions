@@ -17,14 +17,14 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert File.exist? @filename
-        assert File.read(@filename) == 'new content'
+        assert_file_exist @filename
+        assert_file_content @filename, 'new content'
 
 
         command.undo
 
-        assert File.exist? @filename
-        assert File.read(@filename) == @original_content
+        assert_file_exist @filename
+        assert_file_content @filename, @original_content
         assert_clean_project
       end
     end
@@ -35,14 +35,14 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert File.exist? @filename
-        assert File.read(@filename) == 'new content'
+        assert_file_exist @filename
+        assert_file_content @filename, 'new content'
 
 
         command.undo
 
-        assert File.exist? @filename
-        assert File.read(@filename) == @original_content
+        assert_file_exist @filename
+        assert_file_content @filename, @original_content
         assert_clean_project
       end
     end

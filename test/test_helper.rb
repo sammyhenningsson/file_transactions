@@ -35,5 +35,37 @@ module FileTransactions
       output = in_project { `git status --short` }
       assert output.empty?, "Project is dirty: \n#{output}"
     end
+
+    def assert_file_exist(file)
+      assert File.exist?(file), "Expected file \"#{file}\" does not exist!"
+    end
+
+    def refute_file_exist(file)
+      refute File.exist?(file), "Expected file \"#{file}\" to not exist!"
+    end
+
+    def assert_dir_exist(dir)
+      assert Dir.exist?(dir), "Expected dir \"#{dir}\" does not exist!"
+    end
+
+    def refute_dir_exist(dir)
+      refute Dir.exist?(dir), "Expected dir \"#{dir}\" to not exist!"
+    end
+
+    def assert_file_content(file, expected)
+      assert_file_exist file
+      actual = File.read(file)
+      assert_equal(expected, actual, <<~MSG)
+        File content does not match:
+        Expected: #{expected}
+        Actual: #{actual}
+      MSG
+    end
+
+    def refute_file_content(file, expected)
+      assert_file_exist file
+      actual = File.read(file)
+      refute_equal(expected, actual, "Expected fiile content to not be the same!")
+    end
   end
 end

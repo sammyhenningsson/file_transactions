@@ -12,11 +12,11 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert File.exist? 'new_file'
+        assert_file_exist 'new_file'
 
         command.undo
 
-        refute File.exist? 'new_file'
+        refute_file_exist 'new_file'
         assert_clean_project
       end
     end
@@ -27,12 +27,12 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert File.exist? 'new_file'
-        assert File.read('new_file') == 'some content'
+        assert_file_exist 'new_file'
+        assert_file_content 'new_file', 'some content'
 
         command.undo
 
-        refute File.exist? 'new_file'
+        refute_file_exist 'new_file'
         assert_clean_project
       end
     end
@@ -43,13 +43,13 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert File.exist? 'dir1/dir2/new_file'
-        assert File.read('dir1/dir2/new_file') == 'some content'
+        assert_file_exist 'dir1/dir2/new_file'
+        assert_file_content 'dir1/dir2/new_file', 'some content'
 
         command.undo
 
-        refute File.exist? 'dir1/dir2/new_file'
-        refute Dir.exist? 'dir1'
+        refute_file_exist 'dir1/dir2/new_file'
+        refute_dir_exist 'dir1'
         assert_clean_project
       end
     end
@@ -60,14 +60,14 @@ module FileTransactions
 
       command.execute
 
-      assert File.exist? path
-      assert File.read(path) == 'some content'
+      assert_file_exist path
+      assert_file_content path, 'some content'
 
       command.undo
 
-      refute File.exist? path
-      refute Dir.exist? File.join(tmp_dir, 'some_directory')
-      assert Dir.exist? tmp_dir
+      refute_file_exist path
+      refute_dir_exist File.join(tmp_dir, 'some_directory')
+      assert_dir_exist tmp_dir
       in_project { assert_clean_project }
     end
   end

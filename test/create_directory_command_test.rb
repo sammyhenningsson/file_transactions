@@ -10,11 +10,11 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert Dir.exist? 'new_directory'
+        assert_dir_exist 'new_directory'
 
         command.undo
 
-        refute Dir.exist? 'new_directory'
+        refute_dir_exist 'new_directory'
         assert_clean_project
       end
     end
@@ -25,13 +25,13 @@ module FileTransactions
       in_project do
         command.execute
 
-        assert Dir.exist? 'dir1'
-        assert Dir.exist? 'dir1/dir2'
-        assert Dir.exist? 'dir1/dir2/dir3'
+        assert_dir_exist 'dir1'
+        assert_dir_exist 'dir1/dir2'
+        assert_dir_exist 'dir1/dir2/dir3'
 
         command.undo
 
-        refute Dir.exist? 'dir1'
+        refute_dir_exist 'dir1'
         assert_clean_project
       end
     end

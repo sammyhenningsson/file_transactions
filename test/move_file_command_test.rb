@@ -15,14 +15,14 @@ module FileTransactions
       in_project do
         command.execute
 
-        refute File.exist? @filename
-        assert File.exist? 'moved_file'
+        refute_file_exist @filename
+        assert_file_exist 'moved_file'
 
         command.undo
 
-        assert File.exist? @filename
-        assert File.read(@filename) == @original_content
-        refute File.exist? 'moved_file'
+        assert_file_exist @filename
+        assert_file_content(@filename, @original_content)
+        refute_file_exist 'moved_file'
         assert_clean_project
       end
     end
@@ -33,14 +33,14 @@ module FileTransactions
       in_project do
         command.execute
 
-        refute File.exist? @filename
-        assert File.exist? 'new_dir1/new_dir2/moved_file'
+        refute_file_exist @filename
+        assert_file_exist 'new_dir1/new_dir2/moved_file'
 
         command.undo
 
-        assert File.exist? @filename
-        assert File.read(@filename) == @original_content
-        refute Dir.exist? 'new_dir1'
+        assert_file_exist @filename
+        assert_file_content(@filename, @original_content)
+        refute_dir_exist 'new_dir1'
         assert_clean_project
       end
     end
