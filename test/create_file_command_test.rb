@@ -17,6 +17,7 @@ module FileTransactions
         command.undo
 
         refute File.exist? 'new_file'
+        assert_clean_project
       end
     end
 
@@ -32,6 +33,7 @@ module FileTransactions
         command.undo
 
         refute File.exist? 'new_file'
+        assert_clean_project
       end
     end
 
@@ -48,6 +50,7 @@ module FileTransactions
 
         refute File.exist? 'dir1/dir2/new_file'
         refute Dir.exist? 'dir1'
+        assert_clean_project
       end
     end
 
@@ -65,6 +68,7 @@ module FileTransactions
       refute File.exist? path
       refute Dir.exist? File.join(tmp_dir, 'some_directory')
       assert Dir.exist? tmp_dir
+      in_project { assert_clean_project }
     end
   end
 end

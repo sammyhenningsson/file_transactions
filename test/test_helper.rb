@@ -32,7 +32,8 @@ module FileTransactions
     end
 
     def assert_clean_project
-      assert false # FIXME
+      output = in_project { `git status --short` }
+      assert output.empty?, "Project is dirty: \n#{output}"
     end
   end
 end
