@@ -12,8 +12,7 @@ module FileTransactions
     private
 
     def before
-      dir_command = CreateDirectoryCommand.new(File.dirname(to))
-      add_before dir_command
+      CreateDirectoryCommand.execute(File.dirname(to))
     end
 
     def execute!

@@ -36,6 +36,11 @@ module FileTransactions
       assert output.empty?, "Project is dirty: \n#{output}"
     end
 
+    def refute_clean_project
+      output = in_project { `git status --short` }
+      refute output.empty?, "Project is clean! It was expected to be dirty"
+    end
+
     def assert_file_exist(file)
       assert File.exist?(file), "Expected file \"#{file}\" does not exist!"
     end

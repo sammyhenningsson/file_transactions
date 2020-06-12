@@ -14,9 +14,9 @@ module FileTransactions
     private
 
     def before
-      add_before(
-        CreateFileCommand.new(tmp_name) { FileUtils.copy name, tmp_name }
-      )
+      CreateFileCommand.execute(tmp_name) do
+        FileUtils.copy name, tmp_name
+      end
     end
 
     def execute!

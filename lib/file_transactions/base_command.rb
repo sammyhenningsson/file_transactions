@@ -2,35 +2,86 @@
 
 module FileTransactions
   class BaseCommand
-    def add_before(task)
-      before_tasks << task
-    end
+    class << self
+      def execute(*args, &block)
+        new(*args, &block).execute
+      end
 
-    def add_after(task)
-      after_tasks << task
+      def current=(command)
+        Thread.current['FT::Command'] = command
+      end
+
+      def current
+        Thread.current['FT::Command']
+      end
     end
 
     def execute
-      before
-      before_tasks.map(&:execute)
-      execute!
-      after
-      after_tasks.map(&:execute)
-    rescue StandardError => e
-      # FIXME
-      puts e
+      outer_command = BaseCommand.current
+      prepare
+      run_before
+      run_excecute
+      run_after
+    rescue StandardError
+      self.failure_state = state
+      raise
+    ensure
+      BaseCommand.current = outer_command
     end
 
     def undo
-      after_tasks.reverse_each.map(&:undo)
-      undo!
-      before_tasks.reverse_each.map(&:undo)
-    rescue StandardError => e
-      # FIXME
-      puts e
+      raise Error, "Cannot undo #{self.class} which hasn't been executed" unless executed?
+
+      sub_commands[:after].reverse_each(&:undo)
+      undo! unless failure_state == :before
+      sub_commands[:before].reverse_each(&:undo)
+    end
+
+    def register(command)
+      sub_commands[state] << command
+    end
+
+    def executed?
+      !!executed
+    end
+
+    def failed?
+      !!failure_state
     end
 
     private
+
+    attr_accessor :state, :executed, :failure_state
+
+    def prepare
+      (BaseCommand.current || Transaction.current)&.register self
+
+      BaseCommand.current = self
+      self.executed = true
+    end
+
+    def sub_commands
+      @sub_commands ||= {
+        before: [],
+        exec: [],
+        after: [],
+      }
+    end
+
+    def run_before
+      self.state = :before
+      before
+    end
+
+    def run_excecute
+      self.state = :exec
+      execute!
+    end
+
+    def run_after
+      self.state = :after
+      after
+    end
 
     def before; end
 
@@ -43,15 +94,5 @@ module FileTransactions
     end
 
     def after; end
-
-    def before_tasks
-      @before_tasks ||= []
-    end
-
-    def after_tasks
-      @after_tasks ||= []
-    end
   end
 end
-
-FT = FileTransactions

@@ -11,7 +11,8 @@ module FileTransactions
 
     def before
       dir = File.dirname(name)
-      add_before CreateDirectoryCommand.new(dir)
+      return if Dir.exist? dir
+      CreateDirectoryCommand.execute(dir)
     end
 
     def execute!
