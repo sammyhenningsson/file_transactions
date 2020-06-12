@@ -20,8 +20,7 @@ module FileTransactions
       outer_command = BaseCommand.current
       prepare
       run_before
-      run_excecute
-      run_after
+      run_excecute.tap { run_after }
     rescue StandardError
       self.failure_state = state
       raise
@@ -33,8 +32,9 @@ module FileTransactions
       raise Error, "Cannot undo #{self.class} which hasn't been executed" unless executed?
 
       sub_commands[:after].reverse_each(&:undo)
-      undo! unless failure_state == :before
+      ret = undo! unless failure_state == :before
       sub_commands[:before].reverse_each(&:undo)
+      ret
     end
 
     def register(command)
