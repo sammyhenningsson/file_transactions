@@ -7,12 +7,12 @@ module FileTransactions
         new(&block).__send__(:run)
       end
 
-      def current=(transaction)
-        Thread.current['FT::Transaction'] = transaction
+      def scope=(scope)
+        Thread.current['FT.scope'] = scope
       end
 
-      def current
-        Thread.current['FT::Transaction']
+      def scope
+        Thread.current['FT.scope']
       end
 
     end
@@ -28,23 +28,33 @@ module FileTransactions
       commands << command
     end
 
+    def rollback
+      return if backrolled?
+
+      commands.reverse_each(&:undo)
+      self.backrolled = true
+    end
+    alias undo rollback
+
+    def backrolled?
+      !!backrolled
+    end
+
     private
 
     attr_reader :block, :commands
+    attr_accessor :backrolled
 
     def run
-      outer_transaction = Transaction.current
-      Transaction.current = self
+      scope = Transaction.scope
+      scope&.register self
+      Transaction.scope = self
       block.call
     rescue StandardError
       rollback
       raise
     ensure
-      Transaction.current = outer_transaction
-    end
-
-    def rollback
-      commands.reverse_each(&:undo)
+      Transaction.scope = scope
     end
   end
 end

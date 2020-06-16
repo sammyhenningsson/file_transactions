@@ -109,7 +109,7 @@ module FileTransactions
         end
 
         assert_equal 'crash', error.message
-        assert_file_content 'new_file', 'world'
+        assert_clean_project
       end
     end
   end

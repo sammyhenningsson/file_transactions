@@ -2,22 +2,13 @@
 
 module FileTransactions
   class BaseCommand
-    class << self
-      def execute(*args, &block)
-        new(*args, &block).execute
-      end
-
-      def current=(command)
-        Thread.current['FT::Command'] = command
-      end
-
-      def current
-        Thread.current['FT::Command']
-      end
+    def self.execute(*args, &block)
+      new(*args, &block).execute
     end
 
     def execute
-      outer_command = BaseCommand.current
+      scope = Transaction.scope
+      scope&.register self
       prepare
       run_before
       run_excecute.tap { run_after }
@@ -25,13 +16,14 @@ module FileTransactions
       self.failure_state = state
       raise
     ensure
-      BaseCommand.current = outer_command
+      Transaction.scope = scope
     end
 
     def undo
       raise Error, "Cannot undo #{self.class} which hasn't been executed" unless executed?
 
       sub_commands[:after].reverse_each(&:undo)
+
       ret = undo! unless failure_state == :before
       sub_commands[:before].reverse_each(&:undo)
       ret
@@ -54,9 +46,7 @@ module FileTransactions
     attr_accessor :state, :executed, :failure_state
 
     def prepare
-      (BaseCommand.current || Transaction.current)&.register self
-
-      BaseCommand.current = self
+      Transaction.scope = self
       self.executed = true
     end
 
