@@ -3,7 +3,7 @@
 module FileTransactions
   class BaseCommand
     def self.execute(*args, &block)
-      new(*args, &block).execute
+      new(*args, &block).tap { |cmd| cmd.execute }
     end
 
     def execute
