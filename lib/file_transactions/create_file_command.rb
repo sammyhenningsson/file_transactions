@@ -16,7 +16,7 @@ module FileTransactions
     end
 
     def execute!
-      value = block.call
+      value = block.call(name)
       return unless value.is_a? String
 
       File.open(name, 'w') { |f| f.write(value) }

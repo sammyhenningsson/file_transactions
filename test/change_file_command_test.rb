@@ -46,5 +46,15 @@ module FileTransactions
         assert_clean_project
       end
     end
+
+    def test_that_it_passes_the_filename_to_the_block
+      command = ChangeFileCommand.new(@filename) { |name| "changed: #{name}" }
+
+      in_project do
+        command.execute
+
+        assert_file_content 'file', "changed: #{@filename}"
+      end
+    end
   end
 end

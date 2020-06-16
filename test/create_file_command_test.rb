@@ -54,6 +54,16 @@ module FileTransactions
       end
     end
 
+    def test_that_it_passes_the_filename_to_the_block
+      command = CreateFileCommand.new('new_file') { |name| "filename: #{name}" }
+
+      in_project do
+        command.execute
+
+        assert_file_content 'new_file', 'filename: new_file'
+      end
+    end
+
     def test_that_it_creates_a_file_with_absolute_path
       path = File.join(tmp_dir, 'some_directory', 'new_file')
       command = CreateFileCommand.new(path) { 'some content' }
