@@ -12,12 +12,11 @@ Gem::Specification.new do |spec|
                             transaction. If the transaction is rolled back then all file
                             operations will be undone.
                           DESC
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = 'https://github.com/sammyhenningsson/file_transactions'
   spec.license       = "MIT"
   spec.required_ruby_version = '>= 2.5'
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   spec.files         = Dir['lib/**/*rb']
   spec.require_paths = ["lib"]
