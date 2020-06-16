@@ -74,3 +74,5 @@ module FileTransactions
     end
   end
 end
+
+FT = FileTransactions

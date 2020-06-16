@@ -15,6 +15,3 @@ module FileTransactions
     Transaction.run(&block)
   end
 end
-
-FT = FileTransactions
-
