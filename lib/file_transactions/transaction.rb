@@ -50,9 +50,9 @@ module FileTransactions
       scope&.register self
       Transaction.scope = self
       block.call
-    rescue StandardError
+    rescue StandardError => e
       rollback
-      raise
+      raise unless Rollback === e
     ensure
       Transaction.scope = scope
     end

@@ -112,5 +112,20 @@ module FileTransactions
         assert_clean_project
       end
     end
+
+    def test_that_an_inner_transaction_thats_completed_gets_rolled_back_on_error
+      in_project do
+        FT.transaction do
+          @cmd1.execute
+          FT.transaction do
+            CreateFileCommand.execute('another_file') { 'hello again' }
+            raise FT::Rollback
+          end
+        end
+
+        assert_file_exist 'new_file'
+        refute_file_exist 'another_file'
+      end
+    end
   end
 end
