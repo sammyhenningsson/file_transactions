@@ -9,6 +9,8 @@ module FileTransactions
       @block = block
     end
 
+    private
+
     def before
       dir = File.dirname(name)
       return if Dir.exist? dir
