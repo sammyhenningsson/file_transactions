@@ -18,6 +18,9 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
 
+  spec.cert_chain  = ['certs/sammyhenningsson.pem']
+  spec.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
+
   spec.files         = Dir['lib/**/*rb']
   spec.require_paths = ["lib"]
 end
