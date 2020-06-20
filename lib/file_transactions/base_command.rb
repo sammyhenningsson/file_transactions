@@ -1,11 +1,20 @@
 # frozen_string_literal: true
 
 module FileTransactions
+  # A Base class that all commands must inherit from.
+  #
+  # This class provides all the necessary methods/hooks to make it possible to
+  # group commands together and/or nested inside transactions (and other
+  # commands).
   class BaseCommand
     def self.execute(*args, &block)
       new(*args, &block).tap { |cmd| cmd.execute }
     end
 
+    # Execute the command. This will trigger the following methods:
+    #  * #before
+    #  * #execute!
+    #  * #after
     def execute
       scope = Transaction.scope
       scope&.register self
@@ -19,6 +28,8 @@ module FileTransactions
       Transaction.scope = scope
     end
 
+    # Undo the changes made from a previous call to #execute. All previouly
+    # executed commands will be undone in reverse order.
     def undo
       raise Error, "Cannot undo #{self.class} which hasn't been executed" unless executed?
 
@@ -29,14 +40,18 @@ module FileTransactions
       ret
     end
 
+    # This registers a nested command. This method is called whever a command
+    # is executed and should not be called manually.
     def register(command)
       sub_commands[state] << command
     end
 
+    # Returns true of false depending on if the commands has been executed.
     def executed?
       !!executed
     end
 
+    # Returns true if the command has been unsuccessfully executed, otherwise false.
     def failed?
       !!failure_state
     end

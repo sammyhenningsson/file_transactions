@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module FileTransactions
+  # A class that keeps track of commands and nested transactions. If an
+  # exception is raised inside the transaction, then all commands and nested
+  # transactions get undone.
   class Transaction
     class << self
       def run(&block)

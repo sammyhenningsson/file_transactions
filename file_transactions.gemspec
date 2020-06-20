@@ -8,9 +8,13 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Transactions for file operations'
   spec.description   = <<~DESC
-                            A set of file operation that can be undone or wrapped in a
-                            transaction. If the transaction is rolled back then all file
-                            operations will be undone.
+                            A library for creating commands can be done and
+                            undone. Multiple commands can be grouped together
+                            in a transaction making sure all commands succeed
+                            or gets rolled back. This gem includes a few
+                            commands for file operations but it makes it easy
+                            to create custom commands and use them for more
+                            than just file operations.
                           DESC
   spec.homepage      = 'https://github.com/sammyhenningsson/file_transactions'
   spec.license       = "MIT"

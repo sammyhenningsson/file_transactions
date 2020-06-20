@@ -4,9 +4,19 @@ require 'fileutils'
 require 'tmpdir'
 
 module FileTransactions
+  # This command supports deleting a file.
+  #
+  # When this command has been executed, the file can be restored by calling
+  # #undo
+  #
+  # ==== Examples
+  #
+  #  # Pass in the filename  name to ::new
+  #  cmd1 = DeleteFileCommand.new('some_existing_file')
   class DeleteFileCommand < BaseCommand
     attr_reader :name, :block
 
+    # @param name [String] The name of the file to be deleted. May be just a name or an absolut or relative path
     def initialize(name)
       @name = name
     end
