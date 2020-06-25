@@ -158,7 +158,7 @@ end
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/file_transactions.
+Bug reports and pull requests are welcome on GitHub at https://github.com/sammyhenningsson/file_transactions.
 
 
 ## License
