@@ -7,8 +7,12 @@ module FileTransactions
   # group commands together and/or nested inside transactions (and other
   # commands).
   class BaseCommand
-    def self.execute(*args, &block)
-      new(*args, &block).tap { |cmd| cmd.execute }
+    def self.execute(*args, **kwargs, &block)
+      if RUBY_VERSION < '3.0' && kwargs.empty?
+        new(*args, &block).tap { |cmd| cmd.execute }
+      else
+        new(*args, **kwargs, &block).tap { |cmd| cmd.execute }
+      end
     end
 
     # Execute the command. This will trigger the following methods:
