@@ -2,6 +2,7 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require 'file_transactions'
+require 'ft'
 
 require 'minitest/autorun'
 require 'tmpdir'
@@ -74,5 +75,3 @@ module FileTransactions
     end
   end
 end
-
-FT = FileTransactions

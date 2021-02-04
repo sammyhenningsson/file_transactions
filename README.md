@@ -1,7 +1,7 @@
 # FileTransactions
 
 This gem makes it easy to wrap code in classes using the command pattern. This means that a specific operation/task can be executed and after that, it can be undone. Multiple commands can be grouped in a (non-database) transaction, that will undo all executed commands if an exception is raised.
-This gem includes a few commands for simple file operations.
+This gem includes a few commands for simple file operations. (Note: in spite of the name and the included commands, this gem is not limited to only file operations)
 
 ## Installation
 
@@ -69,13 +69,15 @@ There is also a short version to create and call a command at once:
   cmd = FileTransactions::CreateFileCommand.execute('my_file') { 'some file content' }
 ```
 
-Sometimes it may be useful to create an alias for `FileTransactions` to save some key strokes:
+If you want to save some key strokes, you can require 'ft' instead of 'file_transactions' which makes `FT` and alias for `FileTransactions`:
 ```ruby
-# In an initializer file or somewhere just after requiring 'file_transactions'
-FT = FileTransactions
+require 'ft'
 
 # Then simply type
 cmd = FT::CreateFileCommad.new('foo') { 'bar }
+
+# Note FileTransactions will still be available
+FT == FileTransactions # => true
 ```
 
 A transaction is simply a call to `FileTransactions.transaction` passing a block that contains commands:
