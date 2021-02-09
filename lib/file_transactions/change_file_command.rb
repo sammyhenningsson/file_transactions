@@ -54,7 +54,7 @@ module FileTransactions
     end
 
     def undo!
-      FileUtils.copy tmp_name, name
+      FileUtils.copy(tmp_name, name) if File.exist? tmp_name
     end
 
     def tmp_name

@@ -38,7 +38,7 @@ module FileTransactions
     end
 
     def undo!
-      directories.reverse_each { |dir| Dir.unlink dir }
+      directories.reverse_each { |dir| Dir.unlink(dir) if Dir.exist? dir }
     end
 
     def directories

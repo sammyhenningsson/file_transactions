@@ -51,7 +51,7 @@ module FileTransactions
     end
 
     def undo!
-      File.unlink name
+      File.unlink(name) if File.exist? name
     end
   end
 end
