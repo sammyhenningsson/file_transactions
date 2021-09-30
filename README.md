@@ -141,7 +141,7 @@ class UpdateTaskEstimate < FileTransactions::BaseCommand
   end
 end
 ```
-Then this commands can now be put together in a transaction, that ensure that a task is claimed and given an estimate. If an exception is raise then the transaction will be rolled back and the task will be unassigned again.
+Then this commands can now be put together in a transaction, that ensure that a task is claimed and given an estimate. If an exception is raised then the transaction will be rolled back and the task will be unassigned again.
 ```ruby
 tasks = ShafClient.new('https://some-task-api.com/', user: 'john', password: 'doe')
                   .get_root
